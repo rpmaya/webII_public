@@ -1,0 +1,94 @@
+### ==========================================
+### 🔗 URL Shortener - Tests
+### ==========================================
+
+@baseUrl = http://localhost:3000
+
+### ==========================================
+### CREAR URLs
+### ==========================================
+
+### Crear URL corta - GitHub
+POST {{baseUrl}}/shorten
+Content-Type: application/json
+
+{
+  "url": "https://github.com/nodejs/node"
+}
+
+### Crear URL corta - Google
+POST {{baseUrl}}/shorten
+Content-Type: application/json
+
+{
+  "url": "https://www.google.com/search?q=nodejs+tutorial"
+}
+
+### Crear URL corta - YouTube
+POST {{baseUrl}}/shorten
+Content-Type: application/json
+
+{
+  "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+}
+
+### Crear URL inválida (debe fallar)
+POST {{baseUrl}}/shorten
+Content-Type: application/json
+
+{
+  "url": "no-es-una-url"
+}
+
+### Crear sin URL (debe fallar)
+POST {{baseUrl}}/shorten
+Content-Type: application/json
+
+{
+  "name": "test"
+}
+
+### ==========================================
+### REDIRECCIÓN
+### ==========================================
+
+### Redirigir (reemplazar CODE con código real)
+# Usar -L en curl para seguir redirecciones
+# curl -L http://localhost:3000/CODE
+GET {{baseUrl}}/abc123
+
+### Ver headers de redirección
+# curl -I http://localhost:3000/CODE
+
+### ==========================================
+### ESTADÍSTICAS
+### ==========================================
+
+### Ver estadísticas (reemplazar CODE)
+GET {{baseUrl}}/stats/abc123
+
+### Estadísticas de URL inexistente
+GET {{baseUrl}}/stats/noexiste
+
+### ==========================================
+### LISTAR Y ELIMINAR
+### ==========================================
+
+### Listar todas las URLs
+GET {{baseUrl}}/api/urls
+
+### Eliminar URL (reemplazar CODE)
+DELETE {{baseUrl}}/api/urls/abc123
+
+### Eliminar URL inexistente
+DELETE {{baseUrl}}/api/urls/noexiste
+
+### ==========================================
+### OTROS
+### ==========================================
+
+### Home - Ver endpoints disponibles
+GET {{baseUrl}}/
+
+### Ruta no existente (404)
+GET {{baseUrl}}/api/noexiste
