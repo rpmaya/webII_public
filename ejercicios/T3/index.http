@@ -1,0 +1,81 @@
+### ========================================
+### T3 - URL Shortener API
+### ========================================
+
+### Variables
+@baseUrl = http://localhost:3000
+@code = abc123
+
+### ----------------------------------------
+### GET / - Información del API
+### ----------------------------------------
+GET {{baseUrl}}/
+
+### ----------------------------------------
+### POST /shorten - Crear URL corta
+### ----------------------------------------
+POST {{baseUrl}}/shorten
+Content-Type: application/json
+
+{
+  "url": "https://www.google.com"
+}
+
+### ----------------------------------------
+### GET /:code - Redirigir a URL original
+### (Usa el código devuelto por POST /shorten)
+### ----------------------------------------
+GET {{baseUrl}}/{{code}}
+
+### ----------------------------------------
+### GET /stats/:code - Estadísticas de URL
+### ----------------------------------------
+GET {{baseUrl}}/stats/{{code}}
+
+### ----------------------------------------
+### GET /api/urls - Listar todas las URLs
+### ----------------------------------------
+GET {{baseUrl}}/api/urls
+
+### ----------------------------------------
+### DELETE /api/urls/:code - Eliminar URL
+### ----------------------------------------
+DELETE {{baseUrl}}/api/urls/{{code}}
+
+### ========================================
+### Casos de prueba adicionales
+### ========================================
+
+### POST /shorten - URL inválida (sin protocolo)
+POST {{baseUrl}}/shorten
+Content-Type: application/json
+
+{
+  "url": "www.google.com"
+}
+
+### POST /shorten - Sin URL (campo vacío)
+POST {{baseUrl}}/shorten
+Content-Type: application/json
+
+{
+  "url": ""
+}
+
+### POST /shorten - Body vacío
+POST {{baseUrl}}/shorten
+Content-Type: application/json
+
+{}
+
+### GET /stats/:code - Código inexistente
+GET {{baseUrl}}/stats/noexiste
+
+### DELETE /api/urls/:code - Código inexistente
+DELETE {{baseUrl}}/api/urls/noexiste
+
+### GET /:code - Código inexistente (404)
+GET {{baseUrl}}/noexiste
+
+### GET - Ruta no encontrada (404)
+GET {{baseUrl}}/ruta/que/no/existe
