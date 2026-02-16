@@ -46,8 +46,7 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-// Índices
-userSchema.index({ email: 1 });
+// Índices (email ya tiene índice único por "unique: true")
 userSchema.index({ role: 1, isActive: 1 });
 
 // Ocultar password en JSON
