@@ -1,0 +1,179 @@
+### ==========================================
+### T7 - API con JWT y Roles
+### ==========================================
+
+@baseUrl = http://localhost:3000/api
+@contentType = application/json
+
+# Variables - actualizar después de login
+@token = TU_TOKEN_AQUI
+@adminToken = TOKEN_ADMIN_AQUI
+
+### ==========================================
+### HEALTH CHECK
+### ==========================================
+
+GET http://localhost:3000/health HTTP/1.1
+
+### ==========================================
+### AUTH - Registro y Login
+### ==========================================
+
+### Registrar usuario (rol: user por defecto)
+POST {{baseUrl}}/auth/register HTTP/1.1
+Content-Type: {{contentType}}
+
+{
+  "name": "Juan Pérez",
+  "age": 25,
+  "email": "juan@ejemplo.com",
+  "password": "MiPassword123"
+}
+
+### Login
+POST {{baseUrl}}/auth/login HTTP/1.1
+Content-Type: {{contentType}}
+
+{
+  "email": "juan@ejemplo.com",
+  "password": "MiPassword123"
+}
+
+### ==========================================
+### AUTH - Rutas protegidas
+### ==========================================
+
+### Obtener usuario actual (requiere token)
+GET {{baseUrl}}/auth/me HTTP/1.1
+Authorization: Bearer {{token}}
+
+### Actualizar perfil
+PUT {{baseUrl}}/auth/me HTTP/1.1
+Content-Type: {{contentType}}
+Authorization: Bearer {{token}}
+
+{
+  "name": "Juan Pérez Actualizado",
+  "age": 26
+}
+
+### Cambiar contraseña
+PUT {{baseUrl}}/auth/password HTTP/1.1
+Content-Type: {{contentType}}
+Authorization: Bearer {{token}}
+
+{
+  "currentPassword": "MiPassword123",
+  "newPassword": "NuevaPassword456"
+}
+
+### ==========================================
+### TRACKS - Públicas
+### ==========================================
+
+### Listar tracks (público)
+GET {{baseUrl}}/tracks HTTP/1.1
+
+### Obtener track por ID
+GET {{baseUrl}}/tracks/507f1f77bcf86cd799439011 HTTP/1.1
+
+### ==========================================
+### TRACKS - Protegidas (user o admin)
+### ==========================================
+
+### Crear track (requiere token)
+POST {{baseUrl}}/tracks HTTP/1.1
+Content-Type: {{contentType}}
+Authorization: Bearer {{token}}
+
+{
+  "title": "Mi Primera Canción",
+  "duration": 180,
+  "genres": ["rock", "pop"]
+}
+
+### Actualizar track
+PUT {{baseUrl}}/tracks/507f1f77bcf86cd799439011 HTTP/1.1
+Content-Type: {{contentType}}
+Authorization: Bearer {{token}}
+
+{
+  "title": "Título Actualizado"
+}
+
+### ==========================================
+### TRACKS - Solo Admin
+### ==========================================
+
+### Eliminar track (solo admin)
+DELETE {{baseUrl}}/tracks/507f1f77bcf86cd799439011 HTTP/1.1
+Authorization: Bearer {{adminToken}}
+
+### ==========================================
+### USERS - Solo Admin
+### ==========================================
+
+### Listar usuarios (solo admin)
+GET {{baseUrl}}/users HTTP/1.1
+Authorization: Bearer {{adminToken}}
+
+### Cambiar rol de usuario (solo admin)
+PUT {{baseUrl}}/users/507f1f77bcf86cd799439011/role HTTP/1.1
+Content-Type: {{contentType}}
+Authorization: Bearer {{adminToken}}
+
+{
+  "role": "admin"
+}
+
+### ==========================================
+### TESTING - Errores esperados
+### ==========================================
+
+### Sin token (401)
+POST {{baseUrl}}/tracks HTTP/1.1
+Content-Type: {{contentType}}
+
+{
+  "title": "Sin Auth",
+  "duration": 100,
+  "genres": ["test"]
+}
+
+### Token inválido (401)
+POST {{baseUrl}}/tracks HTTP/1.1
+Content-Type: {{contentType}}
+Authorization: Bearer token_invalido_123
+
+{
+  "title": "Token Malo",
+  "duration": 100,
+  "genres": ["test"]
+}
+
+### Usuario intenta eliminar (solo admin) (403)
+DELETE {{baseUrl}}/tracks/507f1f77bcf86cd799439011 HTTP/1.1
+Authorization: Bearer {{token}}
+
+### Usuario intenta ver users (solo admin) (403)
+GET {{baseUrl}}/users HTTP/1.1
+Authorization: Bearer {{token}}
+
+### Password incorrecta en login (401)
+POST {{baseUrl}}/auth/login HTTP/1.1
+Content-Type: {{contentType}}
+
+{
+  "email": "juan@ejemplo.com",
+  "password": "PasswordIncorrecta"
+}
+
+### Email duplicado en registro (409)
+POST {{baseUrl}}/auth/register HTTP/1.1
+Content-Type: {{contentType}}
+
+{
+  "name": "Otro Juan",
+  "email": "juan@ejemplo.com",
+  "password": "OtraPassword123"
+}

@@ -1,0 +1,33 @@
+{
+  "name": "t7-jwt-auth-roles",
+  "version": "1.0.0",
+  "description": "API REST con autenticación JWT y autorización por roles",
+  "type": "module",
+  "main": "src/app.js",
+  "scripts": {
+    "dev": "node --watch --env-file=.env src/app.js",
+    "start": "node --env-file=.env src/app.js"
+  },
+  "keywords": [
+    "express",
+    "mongodb",
+    "jwt",
+    "bcrypt",
+    "authentication",
+    "authorization",
+    "roles"
+  ],
+  "author": "",
+  "license": "ISC",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "express": "^5.0.1",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.9.5",
+    "zod": "^3.24.1"
+  }
+}
