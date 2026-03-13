@@ -111,20 +111,23 @@ Implementar el flujo completo de T7:
 1. **Registro**: Hashear contraseña con `bcryptjs` (10 rounds) antes de guardar
 2. **Login**: Verificar credenciales y generar JWT
 
-El token JWT **debe incluir en el payload**:
+El token JWT **debe incluir únicamente en el payload**:
 ```javascript
-{ userId: user._id, email: user.email, role: user.role }
+{ userId: user._id }
 ```
 
+> El token NO debe incluir datos como `role` o `email`. Esos datos se obtienen siempre consultando la base de datos a partir del `userId`.
+
 3. **Middleware de sesión** (`session.middleware.js`):
-   - Leer el token del header: `req.headers['Authorization']?.split(' ')[1]`
+   - Leer el token del header `Authorization: Bearer <token>`
    - Verificar con `jwt.verify()`
-   - Buscar el usuario en BD con `User.findById(decoded._id)`
-   - Asignar a `req.user`
+   - Buscar el usuario en BD con `User.findById(decoded.userId)`
+   - Asignar a `req.user` el documento completo del usuario
+   - Devolver 401 si no hay token, es inválido o el usuario no existe
 
 4. **Middleware de rol** (`rol.middleware.js`):
-   - Función que acepta un rol como parámetro
-   - Verifica que `req.user.rol === rolRequerido`
+   - Función factory que acepta un rol como parámetro
+   - Verifica que `req.user.role === rolRequerido`
    - Devuelve 403 si no tiene permiso
 
 ---
