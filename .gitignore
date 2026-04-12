@@ -18,3 +18,7 @@ analysis-report.json
 # IDE
 .idea/
 .vscode/
+
+# Claude Code / MCP (may contain API keys)
+.mcp.json
+.claude/settings.local.json
